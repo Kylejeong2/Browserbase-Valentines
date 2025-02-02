@@ -4,3 +4,5 @@ tmp
 downloads
 .DS_Store
 dist
+
+/cookies.json
