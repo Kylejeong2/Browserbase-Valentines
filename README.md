@@ -1,41 +1,128 @@
-# 🤘 Welcome to Stagehand!
+# Browserbase Valentine's Card Generator 🌹
 
-Hey! This is a project built with [Stagehand](https://github.com/browserbase/stagehand).
+A Stagehand-powered automation that generates beautiful Valentine's Day cards using v0.dev. Built with Playwright and enhanced with Stagehand's AI capabilities.
 
-You can build your own web agent using: `npx create-browser-app`!
+## Features
 
-## Setting the Stage
+- Automated v0.dev interaction
+- GitHub authentication handling
+- Smart cookie management
+- Customizable flower themes
+- AI-powered browser automation with fail-safes
 
-Stagehand is an SDK for automating browsers. It's built on top of [Playwright](https://playwright.dev/) and provides a higher-level API for better debugging and AI fail-safes.
+## Quick Start
 
-## Curtain Call
+1. Clone the repo
 
-Get ready for a show-stopping development experience. Just run:
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-```bash
-npm install && npm start
+3. Set up environment variables:
+    ```bash
+    cp .env.example .env
+    ```
+
+    Add your credentials to `.env`:
+    ```env
+    BROWSERBASE_PROJECT_ID="your_project_id"
+    BROWSERBASE_API_KEY="your_api_key"
+    OPENAI_API_KEY="your_openai_key"  # Optional if using Anthropic
+    ANTHROPIC_API_KEY="your_anthropic_key"  # Optional if using OpenAI
+    GITHUB_EMAIL="your_github_email"
+    GITHUB_PASSWORD="your_github_password"
+    ```
+
+4. Run the generator: (example query)
+    ```bash
+    npm start -- --flowerType="rose"
+    ```
+
+## How It Works
+
+The script:
+1. Launches a browser session
+2. Navigates to v0.dev
+3. Handles GitHub authentication if needed
+4. Generates a Valentine's card based on your chosen flower
+5. Extracts the generated code
+
+## Configuration Options
+
+### Running on Browserbase
+Edit `stagehand.config.ts`:
+```typescript
+const StagehandConfig: ConstructorParams = {
+  env: "BROWSERBASE",  // Change from "LOCAL"
+  // ... other config
+};
 ```
 
-## What's Next?
-
-### Add your API keys
-
-Required API keys/environment variables are in the `.env.example` file. Copy it to `.env` and add your API keys.
-
-```bash
-cp .env.example .env && nano .env # Add your API keys to .env
+### Using Claude 3.5 Sonnet
+Edit `stagehand.config.ts`:
+```typescript
+const StagehandConfig: ConstructorParams = {
+  modelName: "claude-3-5-sonnet-latest",  // Change from "gpt-4o"
+  modelClientOptions: {
+    apiKey: process.env.ANTHROPIC_API_KEY,  // Change from OPENAI_API_KEY
+  },
+};
 ```
 
-### Custom .cursorrules
+## Example Usage
 
-We have custom .cursorrules for this project. It'll help quite a bit with writing Stagehand easily.
+Generate different themed cards:
+```bash
+npm start -- --flowerType="tulip"
+npm start -- --flowerType="sunflower"
+npm start -- --flowerType="orchid"
+```
 
-### Run on Browserbase
+## Advanced Features
 
-To run on Browserbase, add your API keys to .env and change `env: "LOCAL"` to `env: "BROWSERBASE"` in [stagehand.config.ts](stagehand.config.ts).
+### Cookie Management
+The script automatically saves and loads cookies between sessions for faster authentication.
 
-### Use Anthropic Claude 3.5 Sonnet
+### Error Handling
+Built-in retries and fallbacks for:
+- Login attempts
+- Code generation
+- Code extraction
 
-1. Add your API key to .env
-2. Change `modelName: "gpt-4o"` to `modelName: "claude-3-5-sonnet-latest"` in [stagehand.config.ts](stagehand.config.ts)
-3. Change `modelClientOptions: { apiKey: process.env.OPENAI_API_KEY }` to `modelClientOptions: { apiKey: process.env.ANTHROPIC_API_KEY }` in [stagehand.config.ts](stagehand.config.ts)
+### Debugging
+Enable verbose logging in `stagehand.config.ts`:
+```typescript
+debugDom: true,
+logger: (message: LogLine) => console.log(logLineToString(message)),
+```
+
+## Project Structure
+
+- `main.ts` - Core automation logic
+- `index.ts` - Entry point and setup
+- `stagehand.config.ts` - Configuration
+- `utils.ts` - Helper functions
+- `.cursorrules` - Custom rules for Stagehand code generation
+
+## Dependencies
+
+- `@browserbasehq/stagehand`: ^1.11.0
+- `@playwright/test`: ^1.49.1
+- `zod`: ^3.22.4
+- Other utilities: chalk, boxen, dotenv, yargs
+
+## Notes
+
+- The script has a 3-minute timeout for card generation
+- GitHub credentials are required for v0.dev access
+- Generated cards are single-file components
+- Browser runs in non-headless mode by default
+
+## Sources
+- main.ts
+- index.ts
+- stagehand.config.ts
+- package.json
+- .env.example
+- .cursorrules

@@ -154,7 +154,8 @@ async function extractCode(page: Page) {
       await page.context().grantPermissions(['clipboard-read', 'clipboard-write']);
       
       // Target the specific copy button with unique properties
-      const copyButton = page.locator('button[aria-label="Copy"]:has(svg.copy-icon)');
+      const copyButton = page.locator('button[aria-label="Copy"][class*="inline-flex"][class*="cursor-pointer"][class*="items-center"]:has(svg.copy-icon):has-text("")');
+
       await copyButton.first().click();
       
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -236,7 +237,12 @@ export async function main({
     const latestCookies = await context.cookies();
     await saveCookies(latestCookies);
 
-    return files;
+    console.log("files", files);
+
+    return {
+      files,
+      prompt
+    };
 
   } catch (error) {
     console.error(chalk.red("❌ Error:"), error);
